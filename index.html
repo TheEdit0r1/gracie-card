@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important} html,body{margin:0} img{max-width:100%}</style>
+<title>Gracie Lv. 19</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  /* Layout: a red Pokédex-style handheld (also Canada red) with a battle-text screen, then a Pokédex entry card. Single deliberate look. */
+  :root {
+    --night: #1d1f4a;
+    --shell: #d7263d;
+    --shell-dark: #9e1328;
+    --screen: #e8f3d8;
+    --ink: #1b1b26;
+    --paper: #fbfbf7;
+    --gold: #ffcb3d;
+    --psychic: #f85888;
+    --ice: #6fd3e0;
+    --hp: #3ccf6e;
+    --pixel: "Press Start 2P", ui-monospace, "Courier New", monospace;
+    --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: radial-gradient(circle at 50% 0%, #2d3170 0%, var(--night) 60%);
+    background-color: var(--night);
+    color: var(--paper);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.55;
+    min-height: 100%;
+    padding-inline: 16px;
+    padding-block: 32px 56px;
+    overflow-x: hidden;
+  }
+  main { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+
+  .eyebrow {
+    font-family: var(--pixel); font-size: 10px; letter-spacing: .12em;
+    color: var(--gold); text-align: center; margin: 0;
+  }
+  h1 {
+    font-family: var(--pixel); font-weight: 400; text-align: center;
+    font-size: clamp(22px, 6.5vw, 34px); line-height: 1.4; margin: 0;
+    text-wrap: balance; text-shadow: 3px 3px 0 var(--shell-dark);
+  }
+
+  /* The handheld */
+  .device {
+    background: var(--shell);
+    border-radius: 18px 18px 18px 56px;
+    padding: 22px 20px 24px;
+    box-shadow: inset -6px -6px 0 var(--shell-dark), 0 18px 40px rgb(0 0 0 / .35);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .lights { display: flex; gap: 8px; align-items: center; }
+  .lens { width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #bff1ff, #2a8fd8 60%); border: 4px solid var(--paper); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--shell-dark); }
+  .dot.r { background: #ff6b6b; } .dot.y { background: var(--gold); } .dot.g { background: var(--hp); }
+
+  .screen {
+    background: var(--screen); color: var(--ink);
+    border: 6px solid #cfcfc4; border-radius: 8px;
+    padding: 16px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .status {
+    background: var(--paper); border: 3px solid var(--ink); border-radius: 4px 14px 4px 4px;
+    padding: 10px 12px; display: grid; gap: 6px;
+    font-family: var(--pixel); font-size: 11px;
+  }
+  .status-top { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .bar-row { display: flex; align-items: center; gap: 8px; font-size: 8px; }
+  .bar { flex: 1; height: 8px; background: #d9d9cf; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; width: 82%; background: #4aa8ff; transition: width 1.4s steps(18); }
+  .bar.full > span { width: 100%; }
+
+  .stage { display: flex; justify-content: center; padding-block: 6px; }
+  .ball { width: 84px; height: 84px; position: relative; animation: wobble 2.4s ease-in-out infinite; }
+  .ball svg, .pika svg { width: 100%; height: 100%; display: block; }
+  .pika { width: 96px; height: 96px; animation: hop .7s ease-out 3; }
+  @keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-14px); } }
+  @keyframes wobble { 0%, 70%, 100% { transform: rotate(0); } 76% { transform: rotate(-14deg); } 84% { transform: rotate(12deg); } 92% { transform: rotate(-6deg); } }
+
+  .textbox {
+    background: var(--paper); border: 4px double var(--ink); border-radius: 6px;
+    padding: 14px 16px 22px; min-height: 92px; position: relative;
+    font-family: var(--pixel); font-size: 12px; line-height: 2;
+  }
+  .textbox p { margin: 0; }
+  .caret { position: absolute; right: 12px; bottom: 6px; font-size: 10px; animation: blink 0.9s steps(2) infinite; }
+  .textbox.done .caret { display: none; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .dpad { width: 66px; height: 66px; position: relative; }
+  .dpad::before, .dpad::after { content: ""; position: absolute; background: var(--ink); border-radius: 4px; }
+  .dpad::before { left: 22px; top: 0; width: 22px; height: 66px; }
+  .dpad::after { top: 22px; left: 0; width: 66px; height: 22px; }
+  .btn-a {
+    font-family: var(--pixel); font-size: 11px; color: var(--ink);
+    background: var(--gold); border: 0; border-radius: 999px;
+    padding: 16px 20px; cursor: pointer;
+    box-shadow: 0 5px 0 #b38600;
+  }
+  .btn-a:active { transform: translateY(4px); box-shadow: 0 1px 0 #b38600; }
+  .btn-a:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
+
+  /* Level-up stats */
+  .stats { display: none; background: var(--paper); border: 3px solid var(--ink); border-radius: 4px; padding: 10px 12px; font-family: var(--pixel); font-size: 9px; line-height: 2.1; }
+  .stats.show { display: block; }
+  .stats div { display: flex; justify-content: space-between; gap: 8px; }
+  .stats b { color: #c0132f; font-weight: 400; }
+
+  /* Pokédex entry + note */
+  .card {
+    background: var(--paper); color: var(--ink);
+    border-radius: 10px; padding: 22px 22px 24px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .card h2 { font-family: var(--pixel); font-weight: 400; font-size: 13px; margin: 0; line-height: 1.6; }
+  .types { display: flex; gap: 8px; flex-wrap: wrap; }
+  .type { font-family: var(--pixel); font-size: 9px; padding: 6px 10px; border-radius: 4px; color: var(--paper); letter-spacing: .08em; }
+  .type.psy { background: var(--psychic); } .type.ice { background: #2c9db0; }
+  dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; font-size: 15px; }
+  dt { font-family: var(--pixel); font-size: 9px; color: #6a6a78; padding-top: 5px; }
+  dd { margin: 0; min-width: 0; }
+  .entry { margin: 0; font-size: 16px; border-top: 2px dashed #cfcfc4; padding-top: 14px; }
+
+  .note { font-size: 18px; line-height: 1.65; }
+  .note p { margin: 0 0 12px; }
+  .note p:last-child { margin: 0; }
+  .sign { font-family: var(--pixel); font-size: 11px; color: var(--shell); }
+
+  canvas#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ball, .pika, .caret { animation: none; }
+    .bar > span { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<main>
+  <div>
+    <p class="eyebrow">1 OCTOBER 2026 · DELIVERED LATE</p>
+    <h1>Happy Birthday, Gracie!</h1>
+  </div>
+
+  <section class="device" aria-label="Birthday handheld">
+    <div class="lights" aria-hidden="true">
+      <span class="lens"></span><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    </div>
+
+    <div class="screen">
+      <div class="status">
+        <div class="status-top"><span>GRACIE ♀</span><span id="lv">Lv18</span></div>
+        <div class="bar-row"><span>EXP</span><div class="bar" id="exp"><span></span></div></div>
+      </div>
+
+      <div class="stage">
+        <div class="pika" id="pika" aria-hidden="true" hidden>
+          <svg viewBox="0 0 100 100">
+            <polygon points="28,48 10,4 46,38" fill="#ffd93b" stroke="#1b1b26" stroke-width="3" stroke-linejoin="round"/>
+            <polygon points="10,4 15.4,16.6 20.2,14.2" fill="#1b1b26"/>
+            <polygon points="72,48 90,4 54,38" fill="#ffd93b" stroke="#1b1b26" stroke-width="3" stroke-linejoin="round"/>
+            <polygon points="90,4 84.6,16.6 79.8,14.2" fill="#1b1b26"/>
+            <ellipse cx="50" cy="64" rx="35" ry="28" fill="#ffd93b" stroke="#1b1b26" stroke-width="3"/>
+            <circle cx="37" cy="58" r="5" fill="#1b1b26"/><circle cx="38.6" cy="56.4" r="1.8" fill="#ffffff"/>
+            <circle cx="63" cy="58" r="5" fill="#1b1b26"/><circle cx="64.6" cy="56.4" r="1.8" fill="#ffffff"/>
+            <circle cx="24" cy="72" r="6.5" fill="#e8413b"/><circle cx="76" cy="72" r="6.5" fill="#e8413b"/>
+            <circle cx="50" cy="65" r="1.4" fill="#1b1b26"/>
+            <path d="M43 70 Q46.5 75 50 70 Q53.5 75 57 70" fill="none" stroke="#1b1b26" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ball" id="ball" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46" fill="#ffffff" stroke="#1b1b26" stroke-width="6"/>
+            <path d="M4 50 A46 46 0 0 1 96 50 Z" fill="#d7263d" stroke="#1b1b26" stroke-width="6"/>
+            <rect x="4" y="46" width="92" height="8" fill="#1b1b26"/>
+            <circle cx="50" cy="50" r="14" fill="#ffffff" stroke="#1b1b26" stroke-width="6"/>
+            <circle cx="50" cy="50" r="5" fill="#e8f3d8"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stats" id="stats" aria-live="polite">
+        <div><span>KINDNESS</span><b>+12</b></div>
+        <div><span>PATIENCE</span><b>+15</b></div>
+        <div><span>GAMING</span><b>+50</b></div>
+        <div><span>POLITENESS</span><b>+EH</b></div>
+      </div>
+
+      <div class="textbox" id="box" aria-live="polite">
+        <p id="line">A wild BIRTHDAY appeared!</p>
+        <span class="caret" aria-hidden="true">▼</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="dpad" aria-hidden="true"></div>
+      <button class="btn-a" id="next" type="button">A ▶ NEXT</button>
+    </div>
+  </section>
+
+  <article class="card">
+    <h2>No. 019 GRACIE</h2>
+    <div class="types"><span class="type psy">PSYCHIC</span><span class="type ice">ICE</span></div>
+    <dl>
+      <dt>REGION</dt><dd>Canada 🍁</dd>
+      <dt>LEVEL</dt><dd>19 (just levelled up)</dd>
+      <dt>ABILITY</dt><dd>Child Psychology: understands small humans better than they understand themselves</dd>
+      <dt>PARTNER</dt><dd>Pikachu ⚡</dd>
+      <dt>NEW MOVE</dt><dd>Video Games (still learning which button is jump)</dd>
+    </dl>
+    <p class="entry">A rare PSYCHIC-type found in the cold northern regions. Studies the minds of children for fun. Recently discovered video games and has not been seen outside since.</p>
+  </article>
+
+  <article class="card note">
+    <p>Happy (slightly belated) 19th, Gracie! Yes, I know it's late. Hope you had the best day, got spoiled rotten, and that every Pokémon you throw a ball at this year stays caught.</p>
+    <p>Have a brilliant year, good luck with the psychology, and welcome to gaming. You won't be getting much sleep from now on.</p>
+    <p class="sign">— JACK</p>
+  </article>
+</main>
+
+<script>
+  const lines = [
+    "A wild BIRTHDAY appeared!",
+    "...3 days late. Classic JACK.",
+    "What? GRACIE is levelling up!",
+    "GRACIE grew to Lv. 19!",
+    "GRACIE's stats went up!",
+    "GRACIE learned VIDEO GAMES!",
+    "Go! PIKACHU!",
+    "PIKACHU used BIRTHDAY WISH! It's super effective!",
+    "HAPPY BIRTHDAY, GRACIE! 🎉"
+  ];
+  const ball = document.getElementById("ball");
+  const pika = document.getElementById("pika");
+  let i = 0;
+  const line = document.getElementById("line");
+  const box = document.getElementById("box");
+  const btn = document.getElementById("next");
+  const lv = document.getElementById("lv");
+  const exp = document.getElementById("exp");
+  const stats = document.getElementById("stats");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let typing;
+  function type(text) {
+    clearInterval(typing);
+    if (reduce) { line.textContent = text; return; }
+    const chars = Array.from(text);
+    let n = 0;
+    line.textContent = "";
+    typing = setInterval(() => {
+      line.textContent += chars[n++];
+      if (n >= chars.length) clearInterval(typing);
+    }, 32);
+  }
+
+  btn.addEventListener("click", () => {
+    if (i >= lines.length - 1) { i = 0; reset(); type(lines[0]); return; }
+    i++;
+    type(lines[i]);
+    if (i === 3) { exp.classList.add("full"); setTimeout(() => { lv.textContent = "Lv19"; }, reduce ? 0 : 1400); }
+    stats.classList.toggle("show", i === 4);
+    if (i === 6) { ball.hidden = true; pika.hidden = false; }
+    if (i === lines.length - 1) { box.classList.add("done"); btn.textContent = "↺ AGAIN"; burst(); }
+  });
+
+  function reset() {
+    exp.classList.remove("full"); lv.textContent = "Lv18";
+    stats.classList.remove("show"); box.classList.remove("done");
+    ball.hidden = false; pika.hidden = true;
+    btn.textContent = "A ▶ NEXT";
+  }
+
+  // Confetti: maple leaves, mini Poké Balls and gold squares
+  const cv = document.getElementById("fx");
+  const ctx = cv.getContext("2d");
+  let parts = [], raf;
+  function size() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0); }
+  addEventListener("resize", size); size();
+
+  function burst() {
+    if (reduce) return;
+    for (let k = 0; k < 90; k++) {
+      parts.push({
+        x: innerWidth / 2 + (Math.random() - .5) * 120, y: innerHeight * .35,
+        vx: (Math.random() - .5) * 9, vy: -Math.random() * 10 - 4,
+        r: Math.random() * Math.PI, vr: (Math.random() - .5) * .2,
+        kind: ["leaf", "ball", "sq"][k % 3], s: 9 + Math.random() * 7, life: 0
+      });
+    }
+    cancelAnimationFrame(raf); tick();
+  }
+  function leaf(s) {
+    ctx.fillStyle = "#d7263d"; ctx.beginPath();
+    const pts = [[0,-1],[.25,-.55],[.6,-.7],[.45,-.2],[.95,-.3],[.7,.15],[.85,.3],[.15,.3],[.1,.9],[-.1,.9],[-.15,.3],[-.85,.3],[-.7,.15],[-.95,-.3],[-.45,-.2],[-.6,-.7],[-.25,-.55]];
+    pts.forEach(([a, b], j) => j ? ctx.lineTo(a * s, b * s) : ctx.moveTo(a * s, b * s));
+    ctx.fill();
+  }
+  function drawBall(s) {
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(0, 0, s * .7, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#d7263d"; ctx.beginPath(); ctx.arc(0, 0, s * .7, Math.PI, 0); ctx.fill();
+    ctx.strokeStyle = "#1b1b26"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, 0, s * .7, 0, Math.PI * 2); ctx.moveTo(-s * .7, 0); ctx.lineTo(s * .7, 0); ctx.stroke();
+  }
+  function tick() {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    parts = parts.filter(p => p.y < innerHeight + 40 && p.life < 400);
+    for (const p of parts) {
+      p.vy += .22; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      if (p.kind === "leaf") leaf(p.s);
+      else if (p.kind === "ball") drawBall(p.s);
+      else { ctx.fillStyle = "#ffcb3d"; ctx.fillRect(-p.s / 3, -p.s / 3, p.s / 1.5, p.s / 1.5); }
+      ctx.restore();
+    }
+    if (parts.length) raf = requestAnimationFrame(tick);
+  }
+</script>
+</body>
+</html>
